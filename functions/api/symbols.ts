@@ -31,7 +31,7 @@ function parseSymbols(text: string): SymbolEntry[] {
     .filter(l => l && !l.startsWith("#"))
     .map(l => {
       const [code, label, type] = l.split("|").map(s => s.trim());
-      const t = type === "index" ? "index" : "stock";
+      const t: "stock" | "index" = type === "index" ? "index" : "stock";
       return { code, label: label ?? code, type: t };
     })
     .filter(s => s.code);

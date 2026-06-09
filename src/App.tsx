@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import type { DailyData, QuoteData, StockCandidate } from "./types";
+import type { DailyData, StockCandidate } from "./types";
 import QuoteCard from "./components/QuoteCard";
 import ProposalCard from "./components/ProposalCard";
 import CandidateCard from "./components/CandidateCard";

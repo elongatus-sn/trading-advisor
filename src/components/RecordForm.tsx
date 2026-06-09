@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SYMBOLS_JP, SYMBOLS_FX, type ProposalData, type QuoteData } from "../types";
+import { DEFAULT_SYMBOLS_JP, SYMBOLS_FX, type ProposalData, type QuoteData } from "../types";
 import { saveRecord } from "../lib/storage";
 
 interface Props {
@@ -17,7 +17,7 @@ export default function RecordForm({ proposal, quotes, today, onSave }: Props) {
   const [actual, setActual] = useState<Record<string, string>>({});
   const [memo, setMemo]     = useState("");
 
-  const allSymbols = [...SYMBOLS_JP, ...SYMBOLS_FX];
+  const allSymbols = [...DEFAULT_SYMBOLS_JP, ...SYMBOLS_FX];
 
   const save = () => {
     saveRecord({
