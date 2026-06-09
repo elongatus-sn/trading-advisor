@@ -1,4 +1,9 @@
 # Cloudflare Pages Functions のローカル開発用環境変数
-# このファイルを .dev.vars にコピーして実際のキーを入力すること
+# このファイルを .dev.vars にコピーして実際の値を入力すること
 # .dev.vars は .gitignore で除外済み
-ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxxxxxxxxxxxxx
+
+# Notion 統合トークン（読み取り専用、提案ページのみ共有）
+NOTION_TOKEN=secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# 提案データ保存用 Notion ページ ID（URLの末尾32桁）
+NOTION_PAGE_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

@@ -29,11 +29,11 @@ export default function App() {
     setError("");
     setSaved(false);
     try {
-      const res = await fetch("/proposal.json?t=" + Date.now());
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const res = await fetch("/api/proposal");
+      if (!res.ok && res.status !== 404) throw new Error(`HTTP ${res.status}`);
       const json = await res.json() as DailyData & { error?: string };
-      if (!json.generatedAt) {
-        setData(null); // まだ生成されていない
+      if (json.error || !json.generatedAt) {
+        setData(null);
         return;
       }
       setData(json);
@@ -106,7 +106,7 @@ export default function App() {
                 {loading ? "読み込み中..." : "↻ 最新データを再読み込み"}
               </button>
               <div style={{ color: "#374151", fontSize: 11, marginTop: 6 }}>
-                提案は GitHub Actions により平日朝6時に自動更新されます
+                提案はクラウドルーチンにより平日朝6時に自動更新されます
               </div>
             </div>
 
@@ -144,7 +144,7 @@ export default function App() {
             {!loading && !data && !errorMsg && (
               <div style={{ textAlign: "center", color: "#4a6180", fontSize: 13, padding: "40px 0" }}>
                 提案はまだ生成されていません。<br />
-                GitHub Actions が平日朝6時に自動生成します。
+                クラウドルーチンが平日朝6時に自動生成します。
               </div>
             )}
 
