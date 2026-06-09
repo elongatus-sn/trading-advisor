@@ -136,7 +136,7 @@ https://query1.finance.yahoo.com/v8/finance/chart/{code}?interval=1d&range=5d
 `notion-update-page` で提案ページの内容を上書き:
 
 ```
-page_id: <PROPOSAL_PAGE_ID>  ← ルーチン作成時に実際のページIDに置き換える
+page_id: 37a1463a76fd8104972bc6f9278ca73d
 content: |
   ```json
   <手順2で生成したJSON全体>

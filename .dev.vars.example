@@ -9,4 +9,4 @@ NOTION_TOKEN=secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 NOTION_PAGE_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # 銘柄設定ページの Notion ページ ID（監視銘柄リスト）
-NOTION_SETTINGS_PAGE_ID=37a1463a76fd8149a6fbefab8488d844
+NOTION_SETTINGS_PAGE_ID=37a1463a76fd81f6b957d61a66806ba6

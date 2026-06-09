@@ -39,7 +39,7 @@
 |---|---|---|
 | `NOTION_TOKEN` | Worker が Notion を読み書き | Cloudflare Pages 環境変数 |
 | `NOTION_PAGE_ID` | 提案データ保存ページのID | Cloudflare Pages 環境変数 |
-| `NOTION_SETTINGS_PAGE_ID` | 監視銘柄リスト設定ページのID（`37a1463a76fd8149a6fbefab8488d844`） | Cloudflare Pages 環境変数 |
+| `NOTION_SETTINGS_PAGE_ID` | 監視銘柄リスト設定ページのID（`37a1463a76fd81f6b957d61a66806ba6`） | Cloudflare Pages 環境変数 |
 
 ※クラウドルーチン側の Notion 書き込みは既存の Notion MCP 認証で動作（新規認証情報不要）
 
