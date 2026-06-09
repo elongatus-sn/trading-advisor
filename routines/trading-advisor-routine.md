@@ -15,7 +15,7 @@
 Notion MCP の `notion-fetch` ツールで以下のページを読む:
 
 ```
-page_id: 37a1463a76fd8149a6fbefab8488d844
+page_id: 37a1463a76fd81f6b957d61a66806ba6
 ```
 
 ページ内のコードブロックに「`code|label|type`」形式で銘柄が記載されている（例）:
