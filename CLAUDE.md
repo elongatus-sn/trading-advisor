@@ -19,17 +19,27 @@
 ## ディレクトリ構成
 - `src/` — React フロントエンド
 - `src/components/` — UI コンポーネント
+- `src/components/CandidateCard.tsx` — AI提案の入れ替え候補銘柄カード
 - `src/lib/storage.ts` — localStorage ラッパー（トレード記録）
 - `src/types.ts` — 型定義・銘柄定数
-- `functions/api/proposal.ts` — Cloudflare Worker（Notion → JSON変換）
+- `functions/api/proposal.ts` — Cloudflare Worker（Notion提案ページ → JSON）
+- `functions/api/symbols.ts` — Cloudflare Worker（Notion設定ページの銘柄一覧 GET/PUT）
 - `routines/trading-advisor-routine.md` — クラウドルーチン用プロンプト原本
 - `scripts/generate-proposal.mjs` — 手動テスト用スクリプト（開発時のみ）
+
+## 銘柄管理
+- **株式・指数**: Notion 設定ページ（`NOTION_SETTINGS_PAGE_ID`）に `code|label|type` 形式で保存
+  - UI（各銘柄の ✕ ボタン）→ `PUT /api/symbols` → Notion に書き込み
+  - AI入れ替え候補（⚡ セクション）→「＋追加」→ `PUT /api/symbols`
+  - クラウドルーチンが毎朝ステップ0でこのリストを読み取る
+- **FX**: USD/JPY, EUR/JPY, CNH/JPY, HKD/JPY の4ペア固定（UI変更不可）
 
 ## 認証情報
 | 情報 | 用途 | 保管場所 |
 |---|---|---|
-| `NOTION_TOKEN` | Worker が Notion を読む（読み取り専用） | Cloudflare Pages 環境変数 |
+| `NOTION_TOKEN` | Worker が Notion を読み書き | Cloudflare Pages 環境変数 |
 | `NOTION_PAGE_ID` | 提案データ保存ページのID | Cloudflare Pages 環境変数 |
+| `NOTION_SETTINGS_PAGE_ID` | 監視銘柄リスト設定ページのID（`37a1463a76fd8149a6fbefab8488d844`） | Cloudflare Pages 環境変数 |
 
 ※クラウドルーチン側の Notion 書き込みは既存の Notion MCP 認証で動作（新規認証情報不要）
 

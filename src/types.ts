@@ -18,7 +18,7 @@ export interface QuoteData {
   open?: number;
   vol?: number;
   range?: string | null;
-  error?: string;
+  error?: string | null;
 }
 
 export interface StockAdvice {
@@ -27,6 +27,15 @@ export interface StockAdvice {
   reason: string;
   loss_cut: string;
   target: string;
+}
+
+/** AIが提案する入れ替え候補銘柄 */
+export interface StockCandidate {
+  code: string;
+  label: string;
+  reason: string;   // 注目理由
+  action: string;   // 推奨アクション
+  target: string;   // 目標値幅
 }
 
 export interface FxAdvice {
@@ -40,6 +49,7 @@ export interface FxAdvice {
 export interface ProposalData {
   summary: string;
   stock_advice: StockAdvice[];
+  stock_candidates: StockCandidate[];  // 入れ替え候補
   fx_advice: FxAdvice[];
   risk_note: string;
 }
@@ -60,15 +70,18 @@ export interface TradeRecord {
   createdAt: string;
 }
 
-export const SYMBOLS_JP: SymbolDef[] = [
+// FX は固定（UI での変更不可）
+export const SYMBOLS_FX: SymbolDef[] = [
+  { code: "USDJPY=X", label: "USD/JPY", type: "fx" },
+  { code: "EURJPY=X", label: "EUR/JPY", type: "fx" },
+  { code: "CNHJPY=X", label: "CNH/JPY", type: "fx" },
+  { code: "HKDJPY=X", label: "HKD/JPY", type: "fx" },
+];
+
+// 株式・指数は Notion 設定ページで管理（以下はフォールバック用デフォルト）
+export const DEFAULT_SYMBOLS_JP: SymbolDef[] = [
   { code: "7203.T", label: "トヨタ",  type: "stock" },
   { code: "6758.T", label: "ソニーG", type: "stock" },
   { code: "9984.T", label: "SBG",     type: "stock" },
   { code: "^N225",  label: "日経225", type: "index" },
-];
-
-export const SYMBOLS_FX: SymbolDef[] = [
-  { code: "USDJPY=X", label: "USD/JPY", type: "fx" },
-  { code: "EURJPY=X", label: "EUR/JPY", type: "fx" },
-  { code: "GBPJPY=X", label: "GBP/JPY", type: "fx" },
 ];
