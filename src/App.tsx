@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { DailyData } from "./types";
 import QuoteCard from "./components/QuoteCard";
 import ProposalCard from "./components/ProposalCard";
@@ -9,6 +9,14 @@ const TODAY = new Date().toLocaleDateString("ja-JP", {
   year: "numeric", month: "2-digit", day: "2-digit", timeZone: "Asia/Tokyo",
 }).replace(/\//g, "-");
 
+function formatJST(iso: string | null): string {
+  if (!iso) return "未生成";
+  return new Date(iso).toLocaleString("ja-JP", {
+    timeZone: "Asia/Tokyo", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit",
+  });
+}
+
 export default function App() {
   const [tab, setTab]         = useState<"today" | "history">("today");
   const [data, setData]       = useState<DailyData | null>(null);
@@ -16,16 +24,18 @@ export default function App() {
   const [errorMsg, setError]  = useState("");
   const [saved, setSaved]     = useState(false);
 
-  const run = useCallback(async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     setError("");
-    setData(null);
     setSaved(false);
     try {
-      const res = await fetch("/api/proposal");
-      if (!res.ok) throw new Error(`サーバーエラー: HTTP ${res.status}`);
+      const res = await fetch("/proposal.json?t=" + Date.now());
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json() as DailyData & { error?: string };
-      if (json.error) throw new Error(json.error);
+      if (!json.generatedAt) {
+        setData(null); // まだ生成されていない
+        return;
+      }
       setData(json);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "不明なエラー");
@@ -33,6 +43,9 @@ export default function App() {
       setLoading(false);
     }
   }, []);
+
+  // ページ表示時に自動読み込み
+  useEffect(() => { load(); }, [load]);
 
   const stockQuotes = data?.quotes.filter(d => d.type !== "fx") ?? [];
   const fxQuotes    = data?.quotes.filter(d => d.type === "fx") ?? [];
@@ -52,7 +65,9 @@ export default function App() {
           <div style={{ fontSize: 16, fontWeight: 800, letterSpacing: 0.5, color: "#93c5fd" }}>
             毎朝トレード顧問
           </div>
-          <div style={{ fontSize: 11, color: "#4a6180", marginTop: 1 }}>{TODAY} — 前日値動き分析 → 設定提案</div>
+          <div style={{ fontSize: 11, color: "#4a6180", marginTop: 1 }}>
+            {TODAY} — {loading ? "読み込み中..." : `最終更新: ${formatJST(data?.generatedAt ?? null)}`}
+          </div>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
           {(["today", "history"] as const).map(t => (
@@ -77,24 +92,22 @@ export default function App() {
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             <div style={{ textAlign: "center" }}>
               <button
-                onClick={run}
+                onClick={load}
                 disabled={loading}
                 style={{
-                  background: loading ? "#1e2f47" : "linear-gradient(135deg, #1d4ed8, #2563eb)",
-                  color: "#fff", border: "none", borderRadius: 12,
-                  padding: "14px 32px", fontSize: 15, fontWeight: 700,
+                  background: loading ? "#1e2f47" : "#162032",
+                  color: loading ? "#4a6180" : "#93c5fd",
+                  border: "1px solid #1e2f47", borderRadius: 10,
+                  padding: "10px 24px", fontSize: 13, fontWeight: 600,
                   cursor: loading ? "not-allowed" : "pointer",
-                  boxShadow: "0 4px 20px rgba(29,78,216,0.3)",
                   transition: "all 0.2s",
                 }}
               >
-                {loading ? "分析中..." : "前日データ取得 → 提案生成"}
+                {loading ? "読み込み中..." : "↻ 最新データを再読み込み"}
               </button>
-              {loading && (
-                <div style={{ color: "#6b85a8", fontSize: 12, marginTop: 8 }}>
-                  Yahoo Finance 取得中 → Claude 分析中...
-                </div>
-              )}
+              <div style={{ color: "#374151", fontSize: 11, marginTop: 6 }}>
+                提案は GitHub Actions により平日朝6時に自動更新されます
+              </div>
             </div>
 
             {errorMsg && (
@@ -125,6 +138,13 @@ export default function App() {
               <div>
                 <div style={{ fontSize: 11, color: "#6b85a8", marginBottom: 10, letterSpacing: 1 }}>AI 設定提案</div>
                 <ProposalCard proposal={data.proposal} />
+              </div>
+            )}
+
+            {!loading && !data && !errorMsg && (
+              <div style={{ textAlign: "center", color: "#4a6180", fontSize: 13, padding: "40px 0" }}>
+                提案はまだ生成されていません。<br />
+                GitHub Actions が平日朝6時に自動生成します。
               </div>
             )}
 

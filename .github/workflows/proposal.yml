@@ -1,0 +1,38 @@
+name: Daily Trade Proposal
+
+on:
+  schedule:
+    # 平日 6:00 JST = UTC 21:00 (前日)
+    - cron: '0 21 * * 0-4'
+  workflow_dispatch:  # 手動実行可能
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate proposal
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/generate-proposal.mjs
+
+      - name: Commit and push
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add public/proposal.json
+          git diff --staged --quiet || (
+            git commit -m "chore: daily proposal $(TZ=Asia/Tokyo date +%Y-%m-%d) [skip ci]"
+            git push
+          )
