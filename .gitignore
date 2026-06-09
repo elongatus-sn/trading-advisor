@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.wrangler/
+.dev.vars
+.env.local
+*.local
+
+# Cloudflare vite plugin の TSコンパイル成果物
+src/**/*.js
+functions/**/*.js

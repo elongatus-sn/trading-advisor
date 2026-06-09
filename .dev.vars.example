@@ -1,0 +1,4 @@
+# Cloudflare Pages Functions のローカル開発用環境変数
+# このファイルを .dev.vars にコピーして実際のキーを入力すること
+# .dev.vars は .gitignore で除外済み
+ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxxxxxxxxxxxxx
