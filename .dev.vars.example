@@ -10,3 +10,7 @@ NOTION_PAGE_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # 銘柄設定ページの Notion ページ ID（監視銘柄リスト）
 NOTION_SETTINGS_PAGE_ID=37a1463a76fd81f6b957d61a66806ba6
+
+# メール通知（Resend）
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+NOTIFY_EMAIL=your@email.com

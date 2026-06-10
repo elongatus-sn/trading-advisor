@@ -190,7 +190,23 @@ page_id: 37a1463a76fd8104972bc6f9278ca73d
 
 ---
 
-### 4. 完了報告
+### 4. メール通知送信
+
+Notion 保存完了後、以下の URL に POST リクエストを送信する:
+
+```
+POST https://trading-advisor.pages.dev/api/notify
+Content-Type: application/json
+
+{}
+```
+
+レスポンスに `"ok": true` が含まれれば送信成功。
+エラーになっても処理を止めずに手順5へ進む。
+
+---
+
+### 5. 完了報告
 
 ```
 ✅ 毎朝トレード顧問 提案生成完了
@@ -199,6 +215,7 @@ page_id: 37a1463a76fd8104972bc6f9278ca73d
 - 取得成功: <成功数>/<総数> 件
 - 入れ替え候補: <stock_candidates の銘柄名 3件>
 - Notion保存: 完了
+- メール通知: <送信成功 or エラー内容>
 ```
 
 ---
