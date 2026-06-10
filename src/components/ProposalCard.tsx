@@ -47,19 +47,53 @@ export default function ProposalCard({ proposal }: { proposal: ProposalData }) {
       {proposal.fx_advice?.length > 0 && (
         <div>
           <div style={{ fontSize: 12, color: "#6b85a8", marginBottom: 8, letterSpacing: 1 }}>FX リピート設定提案</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {proposal.fx_advice.map((a, i) => (
-              <div key={i} style={{ background: "#1a2232", border: "1px solid #2a3a52", borderRadius: 8, padding: "10px 14px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-                  <div>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: "#93c5fd" }}>{a.label}</span>
-                    <span style={{ fontSize: 12, color: "#6b85a8", marginLeft: 10 }}>
-                      レンジ想定: {a.range_low} 〜 {a.range_high}
+              <div key={i} style={{ background: "#111e30", border: "1px solid #1e3a5a", borderRadius: 10, overflow: "hidden" }}>
+                {/* ヘッダー */}
+                <div style={{
+                  background: "#1a2232", borderBottom: "1px solid #1e3a5a",
+                  padding: "9px 14px", display: "flex", flexWrap: "wrap",
+                  justifyContent: "space-between", alignItems: "center", gap: 8,
+                }}>
+                  <span style={{ fontSize: 14, fontWeight: 800, color: "#93c5fd" }}>{a.label}</span>
+                  <div style={{ display: "flex", gap: 12, fontSize: 12, flexWrap: "wrap" }}>
+                    <span style={{ color: "#6b85a8" }}>
+                      レンジ <span style={{ color: "#e2e8f0" }}>{a.range_low} 〜 {a.range_high}</span>
                     </span>
+                    <span style={{ color: "#fcd34d", fontWeight: 700 }}>{a.strategy}</span>
                   </div>
-                  <span style={{ fontSize: 12, color: "#fcd34d" }}>値幅: {a.strategy}</span>
                 </div>
-                {a.note && <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 6 }}>{a.note}</div>}
+                {/* ボディ */}
+                <div style={{ padding: "10px 14px", display: "flex", flexDirection: "column", gap: 8 }}>
+                  {/* 用語説明 */}
+                  {a.strategy_simple && (
+                    <div style={{ fontSize: 11, color: "#60a5fa", fontStyle: "italic" }}>
+                      ＝ {a.strategy_simple}
+                    </div>
+                  )}
+                  {/* 注意点 */}
+                  {a.note && (
+                    <div style={{ display: "flex", gap: 6, alignItems: "flex-start" }}>
+                      <span style={{ fontSize: 11, color: "#4a6180", flexShrink: 0, marginTop: 1 }}>⚠️</span>
+                      <span style={{ fontSize: 12, color: "#94a3b8", lineHeight: 1.5 }}>{a.note}</span>
+                    </div>
+                  )}
+                  {/* 設定方法 */}
+                  {a.daytrade && (
+                    <div style={{
+                      background: "#0d2137", border: "1px solid #1e3a5a",
+                      borderRadius: 6, padding: "8px 10px",
+                    }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: "#60a5fa", letterSpacing: 0.5, marginBottom: 4 }}>
+                        ⚡ 設定方法
+                      </div>
+                      <div style={{ fontSize: 12, color: "#bfdbfe", lineHeight: 1.6 }}>
+                        {a.daytrade}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>

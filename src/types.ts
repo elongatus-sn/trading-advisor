@@ -44,8 +44,10 @@ export interface FxAdvice {
   label: string;
   range_low: number;
   range_high: number;
-  strategy: string;
-  note: string;
+  strategy: string;         // 策略名（例: "50銭幅リピート推奨"）
+  strategy_simple: string;  // 平易な説明（例: "50銭ごとに自動で買い→売りを繰り返す"）
+  note: string;             // 注意点
+  daytrade: string;         // 具体的な設定方法（通貨数・利確幅・損切り目安）
 }
 
 export interface ProposalData {
