@@ -33,9 +33,11 @@ export interface StockAdvice {
 export interface StockCandidate {
   code: string;
   label: string;
-  reason: string;   // 注目理由
-  action: string;   // 推奨アクション
-  target: string;   // 目標値幅
+  reason: string;        // 注目理由
+  action: string;        // 推奨アクション名（例: 押し目買い）
+  action_simple: string; // 用語の簡単な説明（例: 上昇中の下げを狙って買う）
+  target: string;        // 目標値幅
+  daytrade: string;      // デイトレ向けエントリー・決済の具体的提案
 }
 
 export interface FxAdvice {
