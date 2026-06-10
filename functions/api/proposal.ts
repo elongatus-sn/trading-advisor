@@ -63,7 +63,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     return new Response(JSON.stringify(proposal), {
       headers: {
         "Content-Type": "application/json",
-        "Cache-Control": "max-age=300",
+        "Cache-Control": "no-store",
         "Access-Control-Allow-Origin": "*",
       },
     });

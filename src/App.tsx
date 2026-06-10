@@ -35,7 +35,7 @@ export default function App() {
     setError("");
     setSaved(false);
     try {
-      const res = await fetch("/api/proposal");
+      const res = await fetch("/api/proposal", { cache: "no-store" });
       if (!res.ok && res.status !== 404) throw new Error(`HTTP ${res.status}`);
       const json = await res.json() as DailyData & { error?: string };
       if (json.error || !json.generatedAt) { setData(null); return; }
