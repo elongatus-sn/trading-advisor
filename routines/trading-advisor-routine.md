@@ -190,19 +190,41 @@ page_id: 37a1463a76fd8104972bc6f9278ca73d
 
 ---
 
-### 4. メール通知送信
+### 4. Gmail でメール通知
 
-Notion 保存完了後、以下の URL に POST リクエストを送信する:
+Gmail コネクターを使って以下の内容でメールを送信する。
 
+**件名:**
 ```
-POST https://trading-advisor.pages.dev/api/notify
-Content-Type: application/json
-
-{}
+📈 毎朝トレード顧問 <MM/DD> — 提案生成完了
 ```
 
-レスポンスに `"ok": true` が含まれれば送信成功。
-エラーになっても処理を止めずに手順5へ進む。
+**本文（テキスト形式）:**
+```
+【相場サマリ】
+<proposal.summary>
+
+【リスク】
+<proposal.risk_note>
+
+【日本株 前日終値】
+<各銘柄: label  last円  pct% の一覧>
+
+【日本株 設定提案】
+<各銘柄: label / action / reason / 損切 loss_cut / 利確 target>
+
+【⚡ 入れ替え候補】
+<各候補: label(code) — action — reason — 目標 target>
+  デイトレ: daytrade
+
+【FX リピート設定】
+<各ペア: label  range_low〜range_high  strategy>
+  strategy_simple
+  設定: daytrade
+
+【アプリ】
+https://trading-advisor.pages.dev
+```
 
 ---
 
@@ -215,7 +237,7 @@ Content-Type: application/json
 - 取得成功: <成功数>/<総数> 件
 - 入れ替え候補: <stock_candidates の銘柄名 3件>
 - Notion保存: 完了
-- メール通知: <送信成功 or エラー内容>
+- Gmail送信: 完了
 ```
 
 ---
