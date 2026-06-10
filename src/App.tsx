@@ -30,6 +30,12 @@ export default function App() {
   const [addingCode,   setAddingCode]     = useState<string | null>(null);
   const [symbolMsg,    setSymbolMsg]      = useState("");
 
+  // 手動追加フォーム
+  const [formOpen,     setFormOpen]       = useState(false);
+  const [formCode,     setFormCode]       = useState("");
+  const [formLabel,    setFormLabel]      = useState("");
+  const [formAdding,   setFormAdding]     = useState(false);
+
   const load = useCallback(async () => {
     setLoading(true);
     setError("");
@@ -97,6 +103,32 @@ export default function App() {
       setSymbolMsg("エラー: " + String(e));
     } finally {
       setAddingCode(null);
+    }
+  };
+
+  // 手動追加
+  const handleManualAdd = async () => {
+    const code = formCode.trim().toUpperCase();
+    const label = formLabel.trim() || code;
+    if (!code) return;
+    if (currentStockSymbols.some(s => s.code === code)) {
+      setSymbolMsg(`「${code}」はすでに監視中です。`);
+      return;
+    }
+    setFormAdding(true);
+    setSymbolMsg("");
+    try {
+      const type = code.startsWith("^") ? "index" : "stock";
+      const updated = [...currentStockSymbols, { code, label, type: type as "stock" | "index" }];
+      await saveSymbols(updated);
+      setSymbolMsg(`「${label}」を追加しました。次回ルーチン実行時から反映されます。`);
+      setFormCode("");
+      setFormLabel("");
+      setFormOpen(false);
+    } catch (e) {
+      setSymbolMsg("エラー: " + String(e));
+    } finally {
+      setFormAdding(false);
     }
   };
 
@@ -212,6 +244,73 @@ export default function App() {
                 </div>
               </div>
             )}
+
+            {/* 銘柄手動追加フォーム */}
+            <div>
+              <button
+                onClick={() => setFormOpen(v => !v)}
+                style={{
+                  background: "transparent", color: "#6b85a8",
+                  border: "1px dashed #2a3a52", borderRadius: 8,
+                  padding: "6px 16px", fontSize: 12, cursor: "pointer",
+                  width: "100%",
+                }}
+              >
+                {formOpen ? "▲ 閉じる" : "＋ 銘柄を手動追加"}
+              </button>
+              {formOpen && (
+                <div style={{
+                  marginTop: 8, background: "#111e30",
+                  border: "1px solid #2a3a52", borderRadius: 8, padding: "12px 14px",
+                  display: "flex", flexWrap: "wrap", gap: 8, alignItems: "flex-end",
+                }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                    <label style={{ fontSize: 10, color: "#4a6180" }}>証券コード</label>
+                    <input
+                      value={formCode}
+                      onChange={e => setFormCode(e.target.value)}
+                      onKeyDown={e => e.key === "Enter" && handleManualAdd()}
+                      placeholder="例: 6861.T"
+                      style={{
+                        background: "#0d1826", border: "1px solid #2a3a52", borderRadius: 6,
+                        color: "#e2e8f0", padding: "6px 10px", fontSize: 13, width: 130,
+                        outline: "none",
+                      }}
+                    />
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                    <label style={{ fontSize: 10, color: "#4a6180" }}>銘柄名（省略可）</label>
+                    <input
+                      value={formLabel}
+                      onChange={e => setFormLabel(e.target.value)}
+                      onKeyDown={e => e.key === "Enter" && handleManualAdd()}
+                      placeholder="例: キーエンス"
+                      style={{
+                        background: "#0d1826", border: "1px solid #2a3a52", borderRadius: 6,
+                        color: "#e2e8f0", padding: "6px 10px", fontSize: 13, width: 150,
+                        outline: "none",
+                      }}
+                    />
+                  </div>
+                  <button
+                    onClick={handleManualAdd}
+                    disabled={!formCode.trim() || formAdding}
+                    style={{
+                      background: !formCode.trim() || formAdding ? "#1e2f47" : "linear-gradient(135deg,#1d4ed8,#2563eb)",
+                      color: !formCode.trim() || formAdding ? "#4a6180" : "#fff",
+                      border: "none", borderRadius: 8,
+                      padding: "7px 18px", fontSize: 13, fontWeight: 700,
+                      cursor: !formCode.trim() || formAdding ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    {formAdding ? "追加中..." : "追加"}
+                  </button>
+                  <div style={{ fontSize: 10, color: "#374151", width: "100%", marginTop: 2 }}>
+                    日本株: 例 6861.T　指数: 例 ^N225　米国株: 例 AAPL
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* FX */}
             {fxQuotes.length > 0 && (
